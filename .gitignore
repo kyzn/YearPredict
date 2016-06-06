@@ -292,3 +292,7 @@ ENV/
 ### IPythonNotebook ###
 # Temporary data
 .ipynb_checkpoints/
+
+
+#Data file:
+YearPredictionMSD.txt
