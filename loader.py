@@ -3,8 +3,8 @@ import pandas as pd
 
 
 def load_data():
-    """Return the MNIST data as a tuple containing the training data,
-    the validation data, and the test data.
+    """Return the MSD as a tuple containing the training data,
+    and the test data.
 
     The ``training_data`` is returned as a tuple with two entries.
     The first entry contains the actual song features.  This is a
@@ -81,7 +81,7 @@ def load_data_wrapper():
     return (training_data, test_data)
 
 def vectorized_result(j):
-    """Return a 89-dimensional unit vector with a 1.0 in the jth
+    """Return a 90-dimensional unit vector with a 1.0 in the jth
     position and zeroes elsewhere.  This is used to convert a year
     (1922..2011) into a corresponding desired output from the neural
     network."""
