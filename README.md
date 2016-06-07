@@ -11,26 +11,7 @@ This section will be updated with additional setup requirements once the project
 
 ##Results
 
-### Constant Prediction
-This section will be updated.
-
-### 1 Nearest Neighbor
-This section will be updated.
-
-### 50 Nearest Neighbor
-This section will be updated.
-
-### Vowpal Wabbit
-This section will be updated.
-
-### Shallow ANN
-This section will be updated.
-
-### Deep ANN
-This section will be updated.
-
-### Convolutional NN
-This section will be updated.
+This section will be updated with an image of results table.
 
 
 ##License
