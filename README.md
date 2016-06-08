@@ -6,6 +6,11 @@ As part of UCSC - CS218 "Deep Learning" class, we wanted to work on The Million 
 ##Setup
 Assuming your machine has ```wget``` and ```unzip```, you can run downloader script by issuing ```. download.sh``` in your terminal. It will download 200MB zip archive, unzip it, and then delete the zip file. Data file (YearPredictionMSD.txt) is added to .gitignore.
 
+Use following commands to install virtual environment and dependencies 
+virtualenv -p python3 venv
+source venv/bin/activate
+pip install -r requirements.txt
+
 This section will be updated with additional setup requirements once the project is completed.
 
 

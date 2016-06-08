@@ -1,0 +1,12 @@
+#jupyter
+ipython
+notebook
+
+numpy
+pandas
+matplotlib
+
+scikit-learn
+scipy
+Theano
+Pillow
