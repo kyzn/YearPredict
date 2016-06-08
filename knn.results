@@ -27,17 +27,17 @@ KNN sqerr
 0.0209569498801
 
 1NN correct
-?
-?
-?
-?
+700
+670
+617
+699
 3
 
 KNN correct
-?
-?
-?
-?
+844
+880
+872
+864
 1
 
 
@@ -45,3 +45,5 @@ KNN correct
 KNN Error:  0.0914279869512
 1NN SqErr:  0.157869954077
 KNN SqErr:  0.139451772844
+1NN Corrn:  0.052082123
+KNN Corrn:  0.06703467
