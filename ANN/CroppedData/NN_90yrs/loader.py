@@ -24,11 +24,11 @@ def load_data():
     """
 
     #Open the file
-    df=pd.read_csv('YearPredictionMSD.txt', sep=',',header=None)
+    df=pd.read_csv('CroppedData.txt', sep=',',header=None)
 
     #Divide into training-test
-    trn = df.values[:463715,:]
-    tst = df.values[463715:,:]
+    trn = df.values[:80000,:]
+    tst = df.values[80000:,:]
 
     #Get training years (both actual years and mapped to 0-1) and features.
     trn_ftr     = trn[:,1:]
