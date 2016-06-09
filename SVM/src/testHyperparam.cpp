@@ -4,9 +4,9 @@
 int main(){
 
 
-	for(int i = -5; i < 16; i+=5){
+	for(int i = 5; i <= 20; i+=5){
 		double C =pow(2, i);
-		for (int j = -15; j < 4; j+=5){
+		for (int j = 0; j <= 5; j+=5){
 			double gamma = pow(2, j);
 
 			std::cout << "C: " << C << std::endl;
