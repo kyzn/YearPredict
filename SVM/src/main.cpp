@@ -3,6 +3,6 @@
 
 int main(){
 	Transform t("../CroppedData.txt");
-	t.save("svmdata.txt");
+	t.save("train.txt", "test.txt", "ans.txt");
 	return 0;
 }
