@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-
 def load_data():
     """Return the MSD as a tuple containing the training data,
     and the test data.
@@ -69,14 +68,6 @@ def load_data_wrapper():
     training_data = zip(training_inputs, training_results)
     test_inputs = [np.reshape(x, (90, 1)) for x in te_d[0]]
     test_data = zip(test_inputs, te_d[1])
-
-
-    # training_inputs = [np.reshape(x, (90, 1)) for x in trn_ftr]
-    # training_results = [vectorized_result(y) for y in trn_yrs_int]
-    # training_data = zip(training_inputs, training_results)
-
-    # test_inputs = [np.reshape(x, (90, 1)) for x in tst_ftr]
-    # test_data = zip(test_inputs, tst_yrs_int)
 
     return (training_data, test_data)
 
