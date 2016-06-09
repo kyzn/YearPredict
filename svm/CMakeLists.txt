@@ -11,7 +11,7 @@ include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-add_executable(testStudent ${SOURCES})
+add_executable(svmtrain ${SOURCES})
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_BUILD_TYPE Debug)
