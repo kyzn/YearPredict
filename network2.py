@@ -31,12 +31,16 @@ class QuadraticCost(object):
         ``y``.
 
         """
-        return 0.5*np.linalg.norm(a-y)**2
+        return 0.5*np.linalg.norm(np.array([[min([abs(x[0]+i) for i in range(-5, 5)])] for x in a-y]))**2
 
     @staticmethod
     def delta(z, a, y):
         """Return the error delta from the output layer."""
-        return (a-y) * sigmoid_prime(z)
+        # print "_______________________________________"+str(random.random())
+        # print ([[min([abs(x[0]+i) for i in range(-5, 5)])] for x in a-y])
+        return np.array([[min([abs(x[0]+i) for i in range(-5, 5)])] for x in a-y]) * sigmoid_prime(z)
+
+        # return (a-y) * sigmoid_prime(z)
 
 
 class CrossEntropyCost(object):
@@ -269,7 +273,7 @@ class Network(object):
         else:
             results = [(np.argmax(self.feedforward(x)), y)
                         for (x, y) in data]
-        return sum(int(x == y) for (x, y) in results)
+        return sum(int(x in [y + i for i in range(-5, 5)]) for (x, y) in results)
 
     def total_cost(self, data, lmbda, convert=False):
         """Return the total cost for the data set ``data``.  The flag
