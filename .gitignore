@@ -298,3 +298,4 @@ ENV/
 #Data file:
 YearPredictionMSD.txt
 CroppedData.txt
+data/
