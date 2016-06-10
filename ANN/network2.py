@@ -129,7 +129,7 @@ class Network(object):
         return a
 
     def SGD(self, training_data, epochs, mini_batch_size, eta,
-            lmbda = 0.0, target,
+            lmbda = 0.0, target=90,
             evaluation_data=None,
             monitor_evaluation_cost=True,
             monitor_evaluation_accuracy=True,
