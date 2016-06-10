@@ -1,9 +1,29 @@
+"""network2.py
+~~~~~~~~~~~~~~
+
+An improved version of network.py, implementing the stochastic
+gradient descent learning algorithm for a feedforward neural network.
+Improvements include the addition of the cross-entropy cost function,
+regularization, and better initialization of network weights.  Note
+that I have focused on making the code simple, easily readable, and
+easily modifiable.  It is not optimized, and omits many desirable
+features.
+
+"""
+
+#### Libraries
+# Standard library
 import json
 import random
 import sys
-import numpy as np
 import math
 
+# Third-party libraries
+import numpy as np
+
+
+
+#### Define the quadratic and cross-entropy cost functions
 
 class QuadraticCost(object):
 
@@ -13,13 +33,11 @@ class QuadraticCost(object):
         ``y``.
 
         """
-
         return 0.5*np.linalg.norm(a-y)**2
 
     @staticmethod
     def delta(z, a, y):
         """Return the error delta from the output layer."""
-
         return (a-y) * sigmoid_prime(z)
 
 
@@ -35,7 +53,6 @@ class CrossEntropyCost(object):
         to the correct value (0.0).
 
         """
-
         return np.sum(np.nan_to_num(-y*np.log(a)-(1-y)*np.log(1-a)))
 
     @staticmethod
@@ -46,9 +63,7 @@ class CrossEntropyCost(object):
         consistent with the delta method for other cost classes.
 
         """
-
         return (a-y)
-
 
 
 #### Main Network class
@@ -113,8 +128,15 @@ class Network(object):
             a = sigmoid(np.dot(w, a)+b)
         return a
 
-    def SGD(self, training_data, evaluation_data,
-            epochs=30, mini_batch_size=10, eta=0.1,lmbda = 0.1):
+    def SGD(self, training_data, epochs, mini_batch_size, eta,
+            lmbda = 0.0, target,
+            evaluation_data=None,
+            monitor_evaluation_cost=True,
+            monitor_evaluation_accuracy=True,
+            monitor_training_cost=True,
+            monitor_training_accuracy=True,
+            monitor_diff=True,
+            monitor_sqdiff=True):
         """Train the neural network using mini-batch stochastic gradient
         descent.  The ``training_data`` is a list of tuples ``(x, y)``
         representing the training inputs and the desired outputs.  The
@@ -138,30 +160,52 @@ class Network(object):
         n = len(training_data)
         evaluation_cost, evaluation_accuracy = [], []
         training_cost, training_accuracy = [], []
-        differences, sqdifferences = [], []
-
-        print "epoch, diff, sqdiff, accuracy"
-
+        diffs, sqdiffs = [], []
         for j in xrange(epochs):
             random.shuffle(training_data)
             mini_batches = [
                 training_data[k:k+mini_batch_size]
                 for k in xrange(0, n, mini_batch_size)]
-            
             for mini_batch in mini_batches:
                 self.update_mini_batch(
                     mini_batch, eta, lmbda, len(training_data))
+            #print "Epoch %s training complete" % j
+            
+            if monitor_training_cost:
+                cost = self.total_cost(training_data, lmbda, target)
+                training_cost.append(cost)
+                #print "Cost on training data: {}".format(cost)
+            
+            if monitor_training_accuracy:
+                accuracy = float(self.accuracy(training_data, convert=True))/n
+                training_accuracy.append(accuracy)
+                #print "Accuracy on training data: {}".format(accuracy)
+            
+            if monitor_evaluation_cost:
+                cost = self.total_cost(evaluation_data, lmbda, target, convert=True)
+                evaluation_cost.append(cost)
+                #print "Cost on evaluation data: {}".format(cost)
+            
+            if monitor_evaluation_accuracy:
+                accuracy = float(self.accuracy(evaluation_data))/n_data
+                evaluation_accuracy.append(accuracy)
+                #print "Accuracy on evaluation data: {}".format(accuracy)
+            
+            if monitor_diff:
+                diff = self.get_diff(evaluation_data,target)
+                diffs.append(diff)
+                #print "Diff on evaluation data: {}".format(diff)
 
-            #Calculate accuracy, error and print to screen
-            accuracy = self.accuracy(evaluation_data)
-            evaluation_accuracy.append(accuracy)
-            difference = self.diff(evaluation_data)
-            differences.append(difference)
-            sqdifference = self.sqdiff(evaluation_data)
-            sqdifferences.append(sqdifference)
-            print j, differences[j], sqdifferences[j], float(evaluation_accuracy[j])/len(evaluation_data)
+            if monitor_sqdiff:
+                sqdiff = self.get_sqdiff(evaluation_data,target)
+                sqdiffs.append(sqdiff)
+                #print "SqDiff on evaluation data: {}".format(sqdiff)
 
 
+            #print
+        return evaluation_cost, evaluation_accuracy, \
+            training_cost, training_accuracy, \
+            diffs,sqdiffs
 
     def update_mini_batch(self, mini_batch, eta, lmbda, n):
         """Update the network's weights and biases by applying gradient
@@ -245,11 +289,9 @@ class Network(object):
         else:
             results = [(np.argmax(self.feedforward(x)), y)
                         for (x, y) in data]
-        #results has the array of tuples (guess, correct value)
-        # where both guess and correct values are between 0-89
         return sum(int(x == y) for (x, y) in results)
 
-    def total_cost(self, data, lmbda, convert=False):
+    def total_cost(self, data, lmbda, target, convert=False):
         """Return the total cost for the data set ``data``.  The flag
         ``convert`` should be set to False if the data set is the
         training data (the usual case), and to True if the data set is
@@ -259,24 +301,24 @@ class Network(object):
         cost = 0.0
         for x, y in data:
             a = self.feedforward(x)
-            if convert: y = vectorized_result(y)
+            if convert: y = vectorized_result(y,target)
             cost += self.cost.fn(a, y)/len(data)
         cost += 0.5*(lmbda/len(data))*sum(
             np.linalg.norm(w)**2 for w in self.weights)
         return cost
 
-    def diff(self, data):
+    def get_diff(self, data, target):
         """Modified from total_cost for Million Song Dataset "diff"
         calculation"""
         cost = 0.0
         for x, y in data:
-            #y is one number 0-89 for test
+            #y is one number 0-89 (or 0-8) for test
             #  it's a vector of 89 0s and 1 1 for training 
             #  let's just use it for test for now
             a = self.feedforward(x) #these are guesses 0-89
             a = np.argmax(a)        #now it's the index of vector
-            a = float(a)/89         #and it's between 0-1 now
-            y = float(y)/89
+            a = float(a)/(target-1)         #and it's between 0-1 now
+            y = float(y)/(target-1)
 
             difference = a -y
             cost += abs(difference)
@@ -284,7 +326,7 @@ class Network(object):
         return cost/len(data)
 
 
-    def sqdiff(self, data):
+    def get_sqdiff(self, data, target):
         """Modified from total_cost for Million Song Dataset "diff"
         calculation"""
 
@@ -292,8 +334,8 @@ class Network(object):
         for x, y in data:
             a = self.feedforward(x) #these are guesses 0-89
             a = np.argmax(a)        #now it's the index of vector
-            a = float(a)/89         #and it's between 0-1 now
-            y = float(y)/89
+            a = float(a)/(target-1)         #and it's between 0-1 now
+            y = float(y)/(target-1)
 
             difference = a -y
             cost += difference**2
@@ -326,18 +368,7 @@ def load(filename):
     return net
 
 #### Miscellaneous functions
-# def vectorized_result(j):
-#     """Return a 10-dimensional unit vector with a 1.0 in the j'th position
-#     and zeroes elsewhere.  This is used to convert a digit (0...9)
-#     into a corresponding desired output from the neural network.
-
-#     """
-#     e = np.zeros((10, 1))
-#     e[j] = 1.0
-#     return e
-
-#Replaced vectorized_result for MNIST images with MSD songs
-from loader import vectorized_result 
+from loader import vectorized_result
 
 def sigmoid(z):
     """The sigmoid function."""
@@ -346,3 +377,4 @@ def sigmoid(z):
 def sigmoid_prime(z):
     """Derivative of the sigmoid function."""
     return sigmoid(z)*(1-sigmoid(z))
+

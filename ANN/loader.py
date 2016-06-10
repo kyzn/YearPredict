@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def load_data():
+def load_data(target):
     """Return the MSD as a tuple containing the training data,
     and the test data.
 
@@ -24,26 +24,36 @@ def load_data():
     """
 
     #Open the file
-    df=pd.read_csv('CroppedData.txt', sep=',',header=None)
+    df=pd.read_csv('YearPredictionMSD.txt', sep=',',header=None)
+    
+    data = df.values #make a copy
+
+    #make every year into 0-89
+    data[:,0]-=1922
+
+    #make every feature into 0-1
+    for i in xrange(1,91):
+        mn,mx = min(data[:,i]), max(data[:,i])
+        data[:,i]-=mn
+        data[:,i]/=(mx-mn)
+    
 
     #Divide into training-test
-    trn = df.values[:80000,:]
-    tst = df.values[80000:,:]
+    trn = data[:463715,:]
+    tst = data[463715:,:]
 
-    #Get training years (both actual years and mapped to 0-1) and features.
+
+
     trn_ftr     = trn[:,1:]
     tst_ftr     = tst[:,1:]
-    trn_yrs_int = trn[:,0].astype(int)
-    tst_yrs_int = tst[:,0].astype(int)
+    trn_yrs_int = (trn[:,0].astype(int))
+    tst_yrs_int = (tst[:,0].astype(int))
 
-    #Use numpy for speed
-    trn_ftr     = np.array(trn_ftr)
-    tst_ftr     = np.array(tst_ftr)
-    trn_yrs_int = np.array(trn_yrs_int)
-    tst_yrs_int = np.array(tst_yrs_int)
 
-    trn_yrs_int-=1922
-    tst_yrs_int-=1922
+    if(target==9): #guess decades not years
+        trn_yrs_int = trn_yrs_int // 10
+        tst_yrs_int = trn_yrs_int // 10
+
 
     training_data = (trn_ftr,trn_yrs_int)
     test_data     = (tst_ftr,tst_yrs_int)
@@ -51,7 +61,7 @@ def load_data():
     return (training_data, test_data)
 
 
-def load_data_wrapper():
+def load_data_wrapper(target):
     """Return the Million Song Dataset as a tuple
     containing the training data and the test data.
 
@@ -59,23 +69,31 @@ def load_data_wrapper():
     data[x][y][z], where:
     x is the index of the example, it is one piece of data
     y is 0 to access features, and 1 to access target y values
-    z only exists if y is 0, and it is index for each feature"""
+    z only exists if y is 0, and it is index for each feature
 
-    tr_d, te_d = load_data()
+    set target="90" to guess years,
+        target="9"  to guess decades.
+
+    """
+
+    tr_d, te_d = load_data(target)
 
     training_inputs = [np.reshape(x, (90, 1)) for x in tr_d[0]]
-    training_results = [vectorized_result(y) for y in tr_d[1]]
+    training_results = [vectorized_result(y,target) for y in tr_d[1]]
     training_data = zip(training_inputs, training_results)
     test_inputs = [np.reshape(x, (90, 1)) for x in te_d[0]]
     test_data = zip(test_inputs, te_d[1])
 
     return (training_data, test_data)
 
-def vectorized_result(j):
+def vectorized_result(j,target):
     """Return a 90-dimensional unit vector with a 1.0 in the jth
     position and zeroes elsewhere.  This is used to convert a year
     (1922..2011) into a corresponding desired output from the neural
     network."""
-    e = np.zeros((90, 1))
+    if (target==9):
+        e = np.zeros((9, 1))
+    else:
+        e = np.zeros((90, 1))
     e[j] = 1.0
     return e
