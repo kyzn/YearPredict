@@ -14,8 +14,24 @@ pip install -r requirements.txt
 ```
 
 ##Results
- - [https://github.com/kyzn/YearPredict/blob/master/ANN/ann.ipynb](KNN experiments)
- - [https://github.com/kyzn/YearPredict/blob/master/ANN/ann.ipynb](ANN experiments)
+
+| **Results of [1] for Years** | **Diff** | **Sq. Diff** | **Accuracy** |
+| --- | --- | --- | --- |
+| Constant   | 8.13 | 10.80    | N/A      |
+| 1NN        | 9.81 | 13.99    | N/A      |
+| 50NN       | 7.58 | 10.20    | N/A      |
+| VW         | 6.14 | 8.76     | N/A      |
+| **Our Results for Years** | **Diff** | **Sq. Diff** | **Accuracy** |
+| Constant      | 9.12 | 12.19    | 0.00    |
+| 1NN           | 11.01| 15.79    | 5.21    |
+| 50NN          | 9.14 | 13.95    | 6.70    |
+| (90,90)       | 8.36 | 13.04    | 7.76    |
+| (90,45,90)    | 7.74 | 11.84    | 8.04    |
+| (90,60,45,90) | 7.27 | 11.19    | 8.33    |
+| **Our Results for Decades** | **Diff** | **Sq. Diff** | **Accuracy** |
+| (90,90)         | 7.69 | 13.23    | 57.42    |
+| (90,45,90)      | 7.44 | 12.86    | 58.45    |
+| (90,60,45,90)   | 7.24 | 12.90    | 59.49    |
 
 
 ##License
@@ -23,3 +39,5 @@ pip install -r requirements.txt
 Please visit [https://github.com/tbertinmahieux/MSongsDB/blob/master/LICENSE](https://github.com/tbertinmahieux/MSongsDB/blob/master/LICENSE) for license details of the *Million Song Dataset project*.
 
 Please visit [https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/README.md](https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/README.md) for license details of *Code samples for "Neural Networks and Deep Learning"*.
+
+[1]: Thierry Bertin-Mahieux, Daniel P.W. Ellis, Brian Whitman, and Paul Lamere. The Million Song Dataset. In Proceedings of the 12th International Society for Music Information Retrieval Conference (ISMIR 2011), 2011.
