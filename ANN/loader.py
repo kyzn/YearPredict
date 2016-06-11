@@ -52,7 +52,7 @@ def load_data(target):
 
     if(target==9): #guess decades not years
         trn_yrs_int = trn_yrs_int // 10
-        tst_yrs_int = trn_yrs_int // 10
+        tst_yrs_int = tst_yrs_int // 10
 
 
     training_data = (trn_ftr,trn_yrs_int)
