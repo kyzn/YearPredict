@@ -1,9 +1,9 @@
-#Year Prediction for Songs
+# Year Prediction for Songs
 
 As part of UCSC - CS218 "Deep Learning" class, we wanted to work on The Million Song Dataset [1] of The Echo Nest and LabROSA. Here you can see our attempts at reproducing their results, and trying to improve it.
 
 
-##Setup
+## Setup
 Assuming your machine has ```wget``` and ```unzip```, you can run downloader script by issuing ```. download.sh``` in your terminal. It will download 200MB zip archive, unzip it, and then delete the zip file. Data file (YearPredictionMSD.txt) is added to .gitignore.
 
 If you prefer to use virtual environments, please use following commands to install dependencies.
@@ -13,7 +13,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-##Results
+## Results
 
 | **Results of [1] for Years** | **Diff** | **Sq. Diff** | **Accuracy** |
 | --- | --- | --- | --- |
@@ -34,7 +34,7 @@ pip install -r requirements.txt
 | (90,60,45,90)   | 7.24 | 12.90    | 59.49    |
 
 
-##License
+## License
 
 Please visit [https://github.com/tbertinmahieux/MSongsDB/blob/master/LICENSE](https://github.com/tbertinmahieux/MSongsDB/blob/master/LICENSE) for license details of the *Million Song Dataset project*.
 
